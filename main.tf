@@ -1,6 +1,6 @@
 terraform {
   cloud {
-    organization = "cantthinkofanameyet"
+    organization = "Cantthinkofanameyet"
 
     workspaces {
       name = "project-b"
@@ -12,7 +12,7 @@ data "terraform_remote_state" "project_a" {
   backend = "remote"
 
   config = {
-    organization = "cantthinkofanameyet"
+    organization = "Cantthinkofanameyet"
     workspaces = {
       name = "project-a"
     }
