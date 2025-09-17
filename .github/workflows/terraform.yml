@@ -36,3 +36,6 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false
 
+      - name: Show Remote Output
+        run: terraform output from_project_a
+
