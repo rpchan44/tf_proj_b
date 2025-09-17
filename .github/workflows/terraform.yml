@@ -1,32 +1,38 @@
-name: Terraform
+
+name: Terraform CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
     steps:
-      - name: Debug token
-        run: echo $TF_TOKEN_app_terraform_io | wc -c
-        env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-      
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.9.5
+          terraform_version: 1.13.3   # pick your version
+
+      - name: Configure Terraform Cloud token
+        run: |
+          echo "Terraform Cloud token configured"
+          if [ -z "$TF_TOKEN_app_terraform_io" ]; then
+            echo "❌ Token not found!"
+            exit 1
+          fi
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-        env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      - name: Terraform Plan
+        run: terraform plan -input=false
 
